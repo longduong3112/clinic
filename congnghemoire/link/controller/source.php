@@ -1,0 +1,139 @@
+<?php
+	
+	class Mclass {
+
+		// CSDL
+		function connDB(){
+			$conn = mysqli_connect("localhost", "root", '', "bookingcare_cnm");
+			$conn -> set_charset("utf8");
+			if(!$conn):
+				echo 'lỗi không kết nối'.mysqli_error();
+			else:
+				return $conn;
+			endif;
+		}
+
+		function exist_user($username){
+			$conn = $this->connDB();
+			$sql = "select * from user where username = '$username'";
+			$result = mysqli_query($conn ,$sql);
+			$existUser = mysqli_fetch_assoc($result);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $existUser; 	
+		}
+
+		function exist_email($email){
+			$conn = $this->connDB();
+			$sql = "select * from user where email = '$email'";
+			$result = mysqli_query($conn ,$sql);
+			$existEmail = mysqli_fetch_assoc($result);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $existEmail;
+		}
+
+		function multipleFunc($sql){
+			$conn = $this->connDB();
+			$result = mysqli_query($conn, $sql);
+			mysqli_close($conn);
+			return $result;
+		}
+
+		function show_info($username){
+			$conn = $this->connDB();
+			$sql = "select * from user where username = '$username'";
+			$result = mysqli_query($conn ,$sql);
+			$user = mysqli_fetch_assoc($result);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $user; 
+		}
+		function show_info_byid($id_user){
+			$conn = $this->connDB();
+			$sql = "select * from user where id_user = '$id_user'";
+			$result = mysqli_query($conn ,$sql);
+			$user = mysqli_fetch_assoc($result);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $user; 
+		}
+
+		function show_info_doctor($id_doctor){
+			$conn = $this->connDB();
+			$sql = "select * from doctor where id_doctor = '$id_doctor'";
+			$result = mysqli_query($conn ,$sql);
+			$doctor = mysqli_fetch_assoc($result);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $doctor;	
+		}
+
+		//
+		function show_doctor($id_khoa,$working_address){
+			$conn = $this->connDB();
+			$sql = "select * from doctor where id_khoa = '$id_khoa' and working_address = '$working_address' ";
+			$result = mysqli_query($conn ,$sql);
+			$doctors = mysqli_fetch_all($result, MYSQLI_ASSOC);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $doctors;
+		}
+
+		function show_chuyen_khoa($id_doctor){
+			$conn = $this->connDB();
+			$sql = "select nameF from khoa a join doctor b on a.id_khoa = b.id_khoa  
+								where id_doctor = '$id_doctor'";
+			$result = mysqli_query($conn ,$sql);
+			$chuyen_khoa = mysqli_fetch_assoc($result);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $chuyen_khoa['nameF'];
+		}
+
+		//
+		function show_lich_hen($id_doctor){
+			$conn = $this->connDB();
+			$sql = "select * from phieukham where id_doctor = '$id_doctor' and chidan is NULL";
+			$result = mysqli_query($conn ,$sql);
+			$lichhen = mysqli_fetch_all($result, MYSQLI_ASSOC);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $lichhen; 
+		}
+
+		// off date
+		function show_lich_nghi($id_doctor){
+			$conn = $this->connDB();
+			$sql = "select * from lichnghi where id_doctor = '$id_doctor' order by ngaynghi ASC ";
+			$result = mysqli_query($conn ,$sql);
+			$lichnghi = mysqli_fetch_all($result, MYSQLI_ASSOC);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $lichnghi;
+		}
+
+		//xem lịch khám
+		function show_lich_kham($id_user){
+			$conn = $this->connDB();
+			$sql = "select * from phieukham where id_user = '$id_user' and chidan is NULL ";
+			$result = mysqli_query($conn ,$sql);
+			$lichkham = mysqli_fetch_all($result, MYSQLI_ASSOC);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $lichkham;
+		}
+
+		function show_lichsu_khambenh($id_user){
+			$conn = $this->connDB();
+			$sql = "select * from phieukham where id_user = '$id_user' and chidan is NOT NULL";
+			$result = mysqli_query($conn ,$sql);
+			$history = mysqli_fetch_all($result, MYSQLI_ASSOC);
+			mysqli_free_result($result);
+			mysqli_close($conn);
+			return $history;
+		}
+
+
+ 	}	
+?>
